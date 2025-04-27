@@ -2,19 +2,12 @@
 
 This repo contains smart contracts for f(x) protocol v2.
 
-## Tests
+Deployment scripts are base on Base branch deployments.
 
-- hardhat tests: `yarn test:hardhat`
-- foundry tests: `yarn test:foundry`
-- simulation tests: `yarn test:simulation`
-- coverage: `yarn coverage`
-
-## Deployment
+## Deployment on BSC forking
 
 ```bash
-npx hardhat ignition deploy ignition/modules/pools/WstETHPool.ts --network <network> --parameters <parameters>
-npx hardhat ignition deploy ignition/modules/Router.ts --network <network> --parameters <parameters>
-npx hardhat ignition deploy ignition/modules/Migration.ts --network <network> --parameters <parameters>
+npx hardhat ignition deploy ignition/modules/BSC.ts --parameters ignition/parameters/bsc.json --network hardhat --write-localhost-deployment
 ```
 
 ## Verify
