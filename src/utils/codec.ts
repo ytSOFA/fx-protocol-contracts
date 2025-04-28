@@ -195,6 +195,7 @@ export enum SpotPricePoolType {
   ETHLSD,
   BalancerV2CachedRate,
   AerodromeCL,
+  PancakeV3,
 }
 
 export function encodeSpotPricePool(

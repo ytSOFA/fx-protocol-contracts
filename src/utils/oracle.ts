@@ -76,6 +76,11 @@ export const ChainlinkPriceFeed: {
       scale: 10n ** (18n - 8n),
       heartbeat: 60 * 3, // 3 multiple
     },
+    "slisBNB-BNB": {
+      feed: "0xea93C82fa07773ed645d8A79eE27041eb867f221",
+      scale: 10n ** (18n - 18n),
+      heartbeat: 86400 * 3 / 2, // 1.5 multiple
+    },
   },
 };
 
@@ -106,6 +111,9 @@ export const BaseSpotPricePool: { [name: string]: bigint } = {
 
 export const BSCSpotPricePool: { [name: string]: bigint } = {
   "WBNB/USDT_V3Uni100": encodeSpotPricePool(BSCAddresses["UniV3_USDT/BNB_100"], SpotPricePoolType.UniswapV3, {base_index: 1, base_scale: 0, quote_scale: 0}),
+  "WBNB/USDT_V3Pancake500": encodeSpotPricePool(BSCAddresses["PancakeV3_USDT/WBNB_500"], SpotPricePoolType.PancakeV3, {base_index: 1, base_scale: 0, quote_scale: 0}),
+  "WBNB/USDT_V3Pancake100": encodeSpotPricePool(BSCAddresses["PancakeV3_USDT/WBNB_100"], SpotPricePoolType.PancakeV3, {base_index: 1, base_scale: 0, quote_scale: 0}),
+  "slisBNB/WBNB_V3Pancake500": encodeSpotPricePool(BSCAddresses["PancakeV3_slisBNB/WBNB_500"], SpotPricePoolType.PancakeV3, {base_index: 0, base_scale: 0, quote_scale: 0}),
 };
 
 // prettier-ignore
@@ -144,7 +152,12 @@ export const BaseSpotPriceEncodings: { [pair: string]: string } = {
 
 export const BSCSpotPriceEncodings: { [pair: string]: string } = {
   "WBNB/USDT": encodeSpotPriceSources([
-    [BSCSpotPricePool["WBNB/USDT_V3Uni100"]], //yt can add more sources
+    [BSCSpotPricePool["WBNB/USDT_V3Uni100"]],
+    [BSCSpotPricePool["WBNB/USDT_V3Pancake500"]],
+    [BSCSpotPricePool["WBNB/USDT_V3Pancake100"]],
+  ]),
+  "slisBNB/WBNB": encodeSpotPriceSources([
+    [BSCSpotPricePool["slisBNB/WBNB_V3Pancake500"]],
   ]),
 }
 

@@ -25,7 +25,7 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       forking: {
-        url: "https://binance.llamarpc.com",
+        url: process.env.BSC_RPC_URL || "https://bsc-mainnet.public.blastapi.io",
       },
       accounts: [{privateKey: process.env.PRIVATE_KEY_BSC!, balance: "100000000000000000000"}],
       chainId: 56123,

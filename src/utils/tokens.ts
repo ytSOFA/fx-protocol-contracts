@@ -222,4 +222,5 @@ export const BaseTokens: { [symbol: string]: { address: string; decimals: number
 export const BSCTokens: { [symbol: string]: { address: string; decimals: number } } = {
   USDT: { decimals: 18, address: "0x55d398326f99059fF775485246999027B3197955" },
   WBNB: { decimals: 18, address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c" },
+  slisBNB: { decimals: 18, address: "0xB0b84D294e0C75A6abe60171b70edEb2EFd14A1B" },
 }
