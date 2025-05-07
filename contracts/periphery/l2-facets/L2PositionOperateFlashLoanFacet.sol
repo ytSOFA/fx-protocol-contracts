@@ -13,9 +13,9 @@ import { IPool } from "../../interfaces/IPool.sol";
 
 import { WordCodec } from "../../common/codec/WordCodec.sol";
 import { LibRouter } from "../libraries/LibRouter.sol";
-import { PancakeFlashLoanFacetBase } from "../facets/PancakeFlashLoanFacetBase.sol";
+import { MorphoFlashLoanFacetBase } from "../facets/MorphoFlashLoanFacetBase.sol";
 
-contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
+contract L2PositionOperateFlashLoanFacet is MorphoFlashLoanFacetBase {
   using EnumerableSet for EnumerableSet.AddressSet;
   using SafeERC20 for IERC20;
   using WordCodec for bytes32;
@@ -24,9 +24,9 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
    * Events *
    **********/
 
-  event OpenOrAdd(address pool, uint256 position, address recipient, uint256 colls, uint256 debts, uint256 borrows, uint256 borrowFee);
+  event OpenOrAdd(address pool, uint256 position, address recipient, uint256 colls, uint256 debts, uint256 borrows);
 
-  event CloseOrRemove(address pool, uint256 position, address recipient, uint256 colls, uint256 debts, uint256 borrows, uint256 borrowFee);
+  event CloseOrRemove(address pool, uint256 position, address recipient, uint256 colls, uint256 debts, uint256 borrows);
 
   /**********
    * Errors *
@@ -52,7 +52,7 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
    * Constructor *
    ***************/
 
-  constructor(address _pancakePool, address _poolManager, address _fxUSD) PancakeFlashLoanFacetBase(_pancakePool) {
+  constructor(address _morpho, address _poolManager, address _fxUSD) MorphoFlashLoanFacetBase(_morpho) {
     poolManager = _poolManager;
     fxUSD = _fxUSD;
   }
@@ -66,14 +66,12 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
   /// @param pool The address of fx position pool.
   /// @param positionId The index of position.
   /// @param borrowAmount The amount of collateral token to borrow.
-  /// @param borrowfee The fee of flashloan.
   /// @param data Hook data passing to `onOpenOrAddPositionFlashLoan`.
   function openOrAddPositionFlashLoan(
     LibRouter.ConvertInParams memory params,
     address pool,
     uint256 positionId,
     uint256 borrowAmount,
-    uint256 borrowfee,
     bytes calldata data
   ) external payable nonReentrant {
     uint256 amountIn = LibRouter.transferInAndConvert(params, IPool(pool).collateralToken()) + borrowAmount;
@@ -82,7 +80,7 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
       borrowAmount,
       abi.encodeCall(
         L2PositionOperateFlashLoanFacet.onOpenOrAddPositionFlashLoan,
-        (pool, positionId, amountIn, borrowAmount, borrowfee, msg.sender, data)
+        (pool, positionId, amountIn, borrowAmount, msg.sender, data)
       )
     );
     // transfer extra collateral token to revenue pool
@@ -94,7 +92,6 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
   /// @param positionId The index of position.
   /// @param pool The address of fx position pool.
   /// @param borrowAmount The amount of collateral token to borrow.
-  /// @param borrowfee The fee of flashloan.
   /// @param data Hook data passing to `onCloseOrRemovePositionFlashLoan`.
   function closeOrRemovePositionFlashLoan(
     LibRouter.ConvertOutParams memory params,
@@ -102,7 +99,6 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
     uint256 positionId,
     uint256 amountOut,
     uint256 borrowAmount,
-    uint256 borrowfee,
     bytes calldata data
   ) external nonReentrant {
     address collateralToken = IPool(pool).collateralToken();
@@ -112,7 +108,7 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
       borrowAmount,
       abi.encodeCall(
         L2PositionOperateFlashLoanFacet.onCloseOrRemovePositionFlashLoan,
-        (pool, positionId, amountOut, borrowAmount, borrowfee, msg.sender, data)
+        (pool, positionId, amountOut, borrowAmount, msg.sender, data)
       )
     );
 
@@ -129,7 +125,6 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
   /// @param position The index of position.
   /// @param amount The amount of collateral token to supply.
   /// @param repayAmount The amount of collateral token to repay.
-  /// @param fee The fee of flashloan.
   /// @param recipient The address of position holder.
   /// @param data Hook data passing to `onOpenOrAddPositionFlashLoan`.
   function onOpenOrAddPositionFlashLoan(
@@ -137,7 +132,6 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
     uint256 position,
     uint256 amount,
     uint256 repayAmount,
-    uint256 fee,
     address recipient,
     bytes memory data
   ) external onlySelf {
@@ -155,19 +149,17 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
     _checkPositionDebtRatio(pool, position, miscData);
     IERC721(pool).transferFrom(address(this), recipient, position);
 
-    emit OpenOrAdd(pool, position, recipient, amount, fxUSDAmount, repayAmount, fee);
+    emit OpenOrAdd(pool, position, recipient, amount, fxUSDAmount, repayAmount);
 
     // swap fxUSD to collateral token
-    _swap(fxUSD, IPool(pool).collateralToken(), fxUSDAmount, repayAmount + fee, swapTarget, swapData);
-
+    _swap(fxUSD, IPool(pool).collateralToken(), fxUSDAmount, repayAmount, swapTarget, swapData);
   }
 
   /// @notice Hook for `closeOrRemovePositionFlashLoan`.
   /// @param pool The address of fx position pool.
   /// @param position The index of position.
-  /// @param amount The amount of collateral token to withdraw, should include flash loan fee.
+  /// @param amount The amount of collateral token to withdraw.
   /// @param borrowAmount The amount of collateral token borrowed.
-  /// @param fee The fee of flashloan.
   /// @param recipient The address of position holder.
   /// @param data Hook data passing to `onCloseOrRemovePositionFlashLoan`.
   function onCloseOrRemovePositionFlashLoan(
@@ -175,7 +167,6 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
     uint256 position,
     uint256 amount,
     uint256 borrowAmount,
-    uint256 fee,
     address recipient,
     bytes memory data
   ) external onlySelf {
@@ -199,7 +190,7 @@ contract L2PositionOperateFlashLoanFacet is PancakeFlashLoanFacetBase {
     }
     IERC721(pool).transferFrom(address(this), recipient, position);
 
-    emit CloseOrRemove(pool, position, recipient, amount, fxUSDAmount, borrowAmount, fee);
+    emit CloseOrRemove(pool, position, recipient, amount, fxUSDAmount, borrowAmount);
   }
 
   /**********************

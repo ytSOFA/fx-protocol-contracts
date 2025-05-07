@@ -168,9 +168,9 @@ export default buildModule("BSC", (m) => {
     { id: "AaveFundingPoolImplementation", after: [PoolManagerInitialize] }
   );
 
-  const L2PositionOperateFlashLoanFacet = m.contract("L2PositionOperateFlashLoanFacet", [
-    m.getParameter("PancakeFlashLoanPool"), PoolManagerProxy, FxUSDProxy],
-    { id: "L2PositionOperateFlashLoanFacet", after: [PoolManagerInitialize] }
+  const PositionOperateFlashLoanFacetV2 = m.contract("PositionOperateFlashLoanFacetV2", [
+    m.getParameter("PancakeFlashLoanPoolV3"), m.getParameter("PancakeFlashLoanPoolV2"), PoolManagerProxy, FxUSDProxy],
+    { id: "PositionOperateFlashLoanFacetV2", after: [PoolManagerInitialize] }
     );
 
   // deploy and configure WBNB pool
@@ -248,7 +248,7 @@ export default buildModule("BSC", (m) => {
     FxUSDBSCPool,
     FxUSDBSCPoolGauge,
     
-    L2PositionOperateFlashLoanFacet,
+    PositionOperateFlashLoanFacetV2,
 
     WBNBPool,
     BNBPriceOracle,

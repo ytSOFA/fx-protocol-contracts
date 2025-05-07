@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-interface IPancake {
+interface IPancakeV3 {
     /// @notice Receive token0 and/or token1 and pay it back, plus a fee, in the callback
     /// @dev The caller of this method receives a callback in the form of IPancakeV3FlashCallback#pancakeV3FlashCallback
     /// @dev Can be used to donate underlying tokens pro-rata to currently in-range liquidity providers by calling
