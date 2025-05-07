@@ -198,36 +198,7 @@ export default buildModule("BSC", (m) => {
   m.call(WBNBPool, "updateFundingRatio", [m.getParameter("WBNBPool_FundingRatio")]);
   m.call(PoolManager, "registerPool", [WBNBPoolProxy, GaugeRewarder, m.getParameter("WBNBPool_CollateralCapacity"), m.getParameter("WBNBPool_DebtCapacity")], {id: "PoolManager_registerPool_WBNB", after: [PoolManagerInitialize]});
   m.call(PoolManager, "updateRateProvider", [BSCTokens.WBNB.address, ZeroAddress], {id: "PoolManager_updateRateProvider_WBNB", after: [PoolManagerInitialize]});
-
-  // deploy and configure slisBNB pool
-  const slisBNB_BNB_PRICE_FEED = encodeChainlinkPriceFeed( //slisBNB / BNB exchange rate
-    ChainlinkPriceFeed.bsc["slisBNB-BNB"].feed,
-    ChainlinkPriceFeed.bsc["slisBNB-BNB"].scale,
-    ChainlinkPriceFeed.bsc["slisBNB-BNB"].heartbeat
-  );
-  const slisBNBPriceOracle = m.contract("SlisBNBPriceOracle", [SpotPriceOracle, BNB_USD_PRICE_FEED, slisBNB_BNB_PRICE_FEED]);
-  const slisBNBRateProvider = m.contract("ChainlinkRateProvider", [slisBNB_BNB_PRICE_FEED], {id: "slisBNBRateProvider"});
-  const slisBNBPoolInitializer = m.encodeFunctionCall(AaveFundingPoolImplementation, "initialize", [
-    admin,
-    m.getParameter("slisBNBPool_Name"),
-    m.getParameter("slisBNBPool_Symbol"),
-    BSCTokens.slisBNB.address,
-    slisBNBPriceOracle,
-  ], {id: "slisBNBPoolInitializer"});
-  const slisBNBPoolProxy = m.contract("TransparentUpgradeableProxy", [AaveFundingPoolImplementation, FxProxyAdmin, slisBNBPoolInitializer], { id: "slisBNBPoolProxy" });
-  const slisBNBPool = m.contractAt("AaveFundingPool", slisBNBPoolProxy, { id: "slisBNBPool" });
-  m.call(slisBNBPriceOracle, "updateOnchainSpotEncodings", [BSCSpotPriceEncodings["WBNB/USDT"], 0], {id: "slisBNBPriceOracle_updateOnchainSpotEncodings_WBNB_USDT", after: [SpotPriceOracleUpdateReaderCall]});
-  m.call(slisBNBPriceOracle, "updateOnchainSpotEncodings", [BSCSpotPriceEncodings["slisBNB/WBNB"], 1], {id: "slisBNBPriceOracle_updateOnchainSpotEncodings_slisBNB_WBNB", after: [SpotPriceOracleUpdateReaderCall]});
-  m.call(slisBNBPriceOracle, "updateOnchainSpotEncodings", [encodeSpotPriceSources([]), 2], {id: "slisBNBPriceOracle_updateOnchainSpotEncodings_slisBNB_USD", after: [SpotPriceOracleUpdateReaderCall]});
-  m.call(slisBNBPool, "updateDebtRatioRange", [m.getParameter("slisBNBPool_DebtRatioLower"), m.getParameter("slisBNBPool_DebtRatioUpper")]);
-  m.call(slisBNBPool, "updateRebalanceRatios", [m.getParameter("slisBNBPool_RebalanceDebtRatio"), m.getParameter("slisBNBPool_RebalanceBonusRatio")]);
-  m.call(slisBNBPool, "updateLiquidateRatios", [m.getParameter("slisBNBPool_LiquidateDebtRatio"), m.getParameter("slisBNBPool_LiquidateBonusRatio")]);
-  m.call(slisBNBPool, "updateOpenRatio", [m.getParameter("slisBNBPool_OpenRatio"), m.getParameter("slisBNBPool_OpenRatioStep")]);
-  m.call(slisBNBPool, "updateCloseFeeRatio", [m.getParameter("slisBNBPool_CloseFeeRatio")]);
-  m.call(slisBNBPool, "updateFundingRatio", [m.getParameter("slisBNBPool_FundingRatio")]);
-  m.call(PoolManager, "registerPool", [slisBNBPoolProxy, GaugeRewarder, m.getParameter("slisBNBPool_CollateralCapacity"), m.getParameter("slisBNBPool_DebtCapacity")], {id: "PoolManager_registerPool_slisBNB", after: [PoolManagerInitialize]});
-  m.call(PoolManager, "updateRateProvider", [BSCTokens.slisBNB.address, slisBNBRateProvider], {id: "PoolManager_updateRateProvider_slisBNB", after: [PoolManagerInitialize]});
-
+  
   return {
     bFXN,
     TokenSchedule,
@@ -252,9 +223,6 @@ export default buildModule("BSC", (m) => {
 
     WBNBPool,
     BNBPriceOracle,
-    slisBNBPool,
-    slisBNBPriceOracle,
-    slisBNBRateProvider,
   };
 });
 /* eslint-enable prettier/prettier */

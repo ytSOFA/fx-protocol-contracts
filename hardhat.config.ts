@@ -30,6 +30,9 @@ const config: HardhatUserConfig = {
       },
       accounts: [{privateKey: process.env.PRIVATE_KEY_BSC!, balance: "100000000000000000000"}],
       chainId: 56123,
+      ignition: {
+        maxPriorityFeePerGas: ethers.parseUnits("0.01", "gwei"),
+      },
     },
     mainnet: {
       url: process.env.MAINNET_RPC_URL || "https://eth.llamarpc.com",
