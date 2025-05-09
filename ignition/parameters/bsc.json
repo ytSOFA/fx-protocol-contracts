@@ -46,7 +46,10 @@
     "slisBNBPool_OpenRatio": "1000000",
     "slisBNBPool_OpenRatioStep": "300000000000000000",
     "slisBNBPool_CloseFeeRatio": "1000000",
-    "slisBNBPool_FundingRatio": "1000000000"
+    "slisBNBPool_FundingRatio": "1000000000",
 
+    "ListaStakeManager": "0x1adB950d8bB3dA4bE104211D5AB038628e477fE6",
+    "PancakeSwapV3SwapRouter": "0x1b81D678ffb9C0263b24A97847620C99d213eB14",
+    "SwapSlippage": "100"
   }
 }

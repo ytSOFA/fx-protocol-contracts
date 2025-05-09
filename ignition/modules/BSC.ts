@@ -134,7 +134,7 @@ export default buildModule("BSC", (m) => {
   const FxUSDUpgrade = m.call(CustomProxyAdmin, "upgrade", [FxUSDProxy, FxUSDImplementation], { id: "FxUSD_upgrade" });
   m.call(CustomProxyAdmin, "changeProxyAdmin", [FxUSDProxy, FxProxyAdmin], { id: "FxUSD_changeProxyAdmin", after: [FxUSDUpgrade] });
   const FxUSD = m.contractAt("L2FxUSD", FxUSDProxy, { id: "FxUSD" });
-  const FxUSDInitialize = m.call(FxUSD, "initialize", ["f(x) USD", "fxUSD"], { after: [FxUSDUpgrade] });
+  const FxUSDInitialize = m.call(FxUSD, "initialize", ["BNB USD", "bnbUSD"], { after: [FxUSDUpgrade] });
 
   // initialize FxUSDBSCPoolGauge proxy
   const FxUSDBSCPoolGaugeProxyUpgrade = m.call(CustomProxyAdmin, "upgrade", [FxUSDBSCPoolGaugeProxy, GaugeImplementation], { id: "FxUSDBSCPoolGauge_upgrade" });
@@ -199,6 +199,20 @@ export default buildModule("BSC", (m) => {
   m.call(PoolManager, "registerPool", [WBNBPoolProxy, GaugeRewarder, m.getParameter("WBNBPool_CollateralCapacity"), m.getParameter("WBNBPool_DebtCapacity")], {id: "PoolManager_registerPool_WBNB", after: [PoolManagerInitialize]});
   m.call(PoolManager, "updateRateProvider", [BSCTokens.WBNB.address, ZeroAddress], {id: "PoolManager_updateRateProvider_WBNB", after: [PoolManagerInitialize]});
   
+  // deploy SlisBNBStrategy for PoolManager
+  const SlisBNBStrategyWBNB = m.contract(
+    "SlisBNBStrategy",
+    [
+      admin,
+      PoolManagerProxy,
+      m.getParameter("ListaStakeManager"),
+      m.getParameter("PancakeSwapV3SwapRouter"),
+      m.getParameter("SwapSlippage"),
+      BSCTokens.WBNB.address,
+      BSCTokens.slisBNB.address,
+    ],
+    { id: "SlisBNBStrategyWBNB" }
+  );
   return {
     bFXN,
     TokenSchedule,
@@ -223,6 +237,8 @@ export default buildModule("BSC", (m) => {
 
     WBNBPool,
     BNBPriceOracle,
+
+    SlisBNBStrategyWBNB,
   };
 });
 /* eslint-enable prettier/prettier */
