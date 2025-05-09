@@ -134,7 +134,7 @@ export default buildModule("BSC", (m) => {
   const FxUSDUpgrade = m.call(CustomProxyAdmin, "upgrade", [FxUSDProxy, FxUSDImplementation], { id: "FxUSD_upgrade" });
   m.call(CustomProxyAdmin, "changeProxyAdmin", [FxUSDProxy, FxProxyAdmin], { id: "FxUSD_changeProxyAdmin", after: [FxUSDUpgrade] });
   const FxUSD = m.contractAt("L2FxUSD", FxUSDProxy, { id: "FxUSD" });
-  const FxUSDInitialize = m.call(FxUSD, "initialize", ["BNB USD", "bnbUSD"], { after: [FxUSDUpgrade] });
+  const FxUSDInitialize = m.call(FxUSD, "initialize", ["Sigma BNB USD", "bnbUSD"], { after: [FxUSDUpgrade] });
 
   // initialize FxUSDBSCPoolGauge proxy
   const FxUSDBSCPoolGaugeProxyUpgrade = m.call(CustomProxyAdmin, "upgrade", [FxUSDBSCPoolGaugeProxy, GaugeImplementation], { id: "FxUSDBSCPoolGauge_upgrade" });
