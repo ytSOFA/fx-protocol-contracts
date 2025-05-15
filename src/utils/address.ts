@@ -102,3 +102,12 @@ export const BaseAddresses: { [name: string]: string } = {
   // Uniswap V3
   "UniV3_WETH/USDC_500": "0xd0b53D9277642d899DF5C87A3966A349A798F224",
 }
+
+export const BSCAddresses: { [name: string]: string } = {
+  // Uniswap V3
+  "UniV3_USDT/BNB_100": "0x47a90A2d92A8367A91EfA1906bFc8c1E05bf10c4",
+  // Pancake V3
+  "PancakeV3_USDT/WBNB_500": "0x36696169c63e42cd08ce11f5deebbcebae652050",
+  "PancakeV3_USDT/WBNB_100": "0x172fcd41e0913e95784454622d1c3724f546f849",
+  "PancakeV3_slisBNB/WBNB_500": "0x9474e972f49605315763c296b122cbb998b615cf"
+}

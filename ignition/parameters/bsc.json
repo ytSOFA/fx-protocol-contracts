@@ -1,0 +1,41 @@
+{
+  "BSC": {
+    "RewardsExpenseRatio": "0",
+    "FundingExpenseRatio": "0",
+    "LiquidationExpenseRatio": "100000000",
+    "RedeemFeeRatio": "5000000",
+    "HarvesterRatio": "10000000",
+    "FlashLoanFeeRatio": "100000",
+    "Treasury": "0x0084C2e1B1823564e597Ff4848a88D61ac63D703",
+    "StableDepegPrice": "995000000000000000",
+    "RedeemCoolDownPeriod": "1800",
+
+    "SpotPriceOracle": "0x25Cfec882F8A2e0a880cDeAD963D6f3D3e04520F",
+
+    "LendingPool": "0x6807dc923806fE8Fd134338EABCA509979a7e0cB",
+    "BaseAsset": "0x55d398326f99059fF775485246999027B3197955",
+
+    "PancakeFlashLoanPoolV3": "0x172fcd41e0913e95784454622d1c3724f546f849",
+    "PancakeFlashLoanPoolV2": "0x16b9a82891338f9ba80e2d6970fdda79d1eb0dae",
+
+    "WBNBPool_Name": "Sigma BNB position",
+    "WBNBPool_Symbol": "xPosition",
+    "WBNBPool_CollateralCapacity": "50000000000000000000000",
+    "WBNBPool_DebtCapacity": "22500000000000000000000000",
+    "WBNBPool_DebtRatioLower": "90909090909090909",
+    "WBNBPool_DebtRatioUpper": "866666666666666666",
+    "WBNBPool_RebalanceDebtRatio": "880000000000000000",
+    "WBNBPool_RebalanceBonusRatio": "25000000",
+    "WBNBPool_LiquidateDebtRatio": "950000000000000000",
+    "WBNBPool_LiquidateBonusRatio": "40000000",
+    "WBNBPool_OpenRatio": "1000000",
+    "WBNBPool_OpenRatioStep": "300000000000000000",
+    "WBNBPool_CloseFeeRatio": "1000000",
+    "WBNBPool_FundingRatio": "1000000000",
+
+    "ListaStakeManager": "0x1adB950d8bB3dA4bE104211D5AB038628e477fE6",
+    "PancakeSwapV3SwapRouter": "0x1b81D678ffb9C0263b24A97847620C99d213eB14",
+    "BinanceWeb3MPCWallet": "0x0000000000000000000000000000000000000000",
+    "SwapSlippage": "100"
+  }
+}

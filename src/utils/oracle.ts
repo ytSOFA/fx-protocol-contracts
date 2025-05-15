@@ -1,4 +1,4 @@
-import { Addresses, BaseAddresses } from "./address";
+import { Addresses, BaseAddresses, BSCAddresses } from "./address";
 import { encodeSpotPricePool, encodeSpotPriceSources, SpotPricePoolType } from "./codec";
 import { EthereumTokens } from "./tokens";
 
@@ -65,6 +65,23 @@ export const ChainlinkPriceFeed: {
       heartbeat: 86400 * 3 / 2, // 1.5 multiple
     },
   },
+  bsc: {
+    "USDT-USD": {
+      feed: "0xB97Ad0E74fa7d920791E90258A6E2085088b4320",
+      scale: 10n ** (18n - 8n),
+      heartbeat: (900 * 3) / 2 * 10000, // 1.5 multiple
+    },
+    "BNB-USD": {
+      feed: "0x71041dddad3595F9CEd3DcCFBe3D1F4b0a16Bb70",
+      scale: 10n ** (18n - 8n),
+      heartbeat: 60 * 3, // 3 multiple
+    },
+    "slisBNB-BNB": {
+      feed: "0xea93C82fa07773ed645d8A79eE27041eb867f221",
+      scale: 10n ** (18n - 18n),
+      heartbeat: 86400 * 3 / 2, // 1.5 multiple
+    },
+  },
 };
 
 /* eslint-disable prettier/prettier */
@@ -92,11 +109,17 @@ export const BaseSpotPricePool: { [name: string]: bigint } = {
   "wstETH/WETH_AeroCL100": encodeSpotPricePool(BaseAddresses["AeroCL_WETH/wstETH_100"], SpotPricePoolType.AerodromeCL, {base_index: 1, base_scale: 0, quote_scale: 0}),
 };
 
+export const BSCSpotPricePool: { [name: string]: bigint } = {
+  "WBNB/USDT_V3Uni100": encodeSpotPricePool(BSCAddresses["UniV3_USDT/BNB_100"], SpotPricePoolType.UniswapV3, {base_index: 1, base_scale: 0, quote_scale: 0}),
+  "WBNB/USDT_V3Pancake500": encodeSpotPricePool(BSCAddresses["PancakeV3_USDT/WBNB_500"], SpotPricePoolType.PancakeV3, {base_index: 1, base_scale: 0, quote_scale: 0}),
+  "WBNB/USDT_V3Pancake100": encodeSpotPricePool(BSCAddresses["PancakeV3_USDT/WBNB_100"], SpotPricePoolType.PancakeV3, {base_index: 1, base_scale: 0, quote_scale: 0}),
+  "slisBNB/WBNB_V3Pancake500": encodeSpotPricePool(BSCAddresses["PancakeV3_slisBNB/WBNB_500"], SpotPricePoolType.PancakeV3, {base_index: 0, base_scale: 0, quote_scale: 0}),
+};
+
 // prettier-ignore
 export const SpotPriceEncodings: { [pair: string]: string } = {
   "WBTC/USDC": encodeSpotPriceSources([
     [SpotPricePool["WBTC/WETH-V3Uni3000"], SpotPricePool["WETH/USDC-V3Uni500"]],
-    [SpotPricePool["WBTC/USDC-Crv3C0"]],
     [SpotPricePool["WBTC/USDC-V3Uni3000"]],
   ]),
   "WETH/USDC": encodeSpotPriceSources([
@@ -126,4 +149,16 @@ export const BaseSpotPriceEncodings: { [pair: string]: string } = {
     [BaseSpotPricePool["wstETH/WETH_AeroCL100"]],
   ]),
 }
+
+export const BSCSpotPriceEncodings: { [pair: string]: string } = {
+  "WBNB/USDT": encodeSpotPriceSources([
+    [BSCSpotPricePool["WBNB/USDT_V3Uni100"]],
+    [BSCSpotPricePool["WBNB/USDT_V3Pancake500"]],
+    [BSCSpotPricePool["WBNB/USDT_V3Pancake100"]],
+  ]),
+  "slisBNB/WBNB": encodeSpotPriceSources([
+    [BSCSpotPricePool["slisBNB/WBNB_V3Pancake500"]],
+  ]),
+}
+
 /* eslint-enable prettier/prettier */

@@ -11,8 +11,9 @@ const config: HardhatUserConfig = {
   solidity: {
     compilers: [
       {
-        version: "0.8.26",
+        version: "0.8.28",
         settings: {
+          viaIR: true,
           optimizer: {
             enabled: true,
             runs: 200,
@@ -23,6 +24,17 @@ const config: HardhatUserConfig = {
     ],
   },
   networks: {
+    hardhat: {
+      forking: {
+        url: process.env.BSC_RPC_URL || "https://bsc-mainnet.public.blastapi.io",
+      },
+      accounts: [{privateKey: process.env.PRIVATE_KEY_BSC!, balance: "100000000000000000000"}],
+      chainId: 56123,
+      ignition: {
+        maxPriorityFeePerGas: ethers.parseUnits("0.01", "gwei"),
+        maxFeePerGasLimit: ethers.parseUnits("100", "gwei"),
+      },
+    },
     mainnet: {
       url: process.env.MAINNET_RPC_URL || "https://eth.llamarpc.com",
       chainId: 1,
