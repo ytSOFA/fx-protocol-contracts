@@ -207,6 +207,7 @@ export default buildModule("BSC", (m) => {
       PoolManagerProxy,
       m.getParameter("ListaStakeManager"),
       m.getParameter("PancakeSwapV3SwapRouter"),
+      m.getParameter("BinanceWeb3MPCWallet"),
       m.getParameter("SwapSlippage"),
       BSCTokens.WBNB.address,
       BSCTokens.slisBNB.address,

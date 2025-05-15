@@ -35,6 +35,7 @@
 
     "ListaStakeManager": "0x1adB950d8bB3dA4bE104211D5AB038628e477fE6",
     "PancakeSwapV3SwapRouter": "0x1b81D678ffb9C0263b24A97847620C99d213eB14",
+    "BinanceWeb3MPCWallet": "0x0000000000000000000000000000000000000000",
     "SwapSlippage": "100"
   }
 }

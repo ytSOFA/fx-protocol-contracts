@@ -32,6 +32,7 @@ const config: HardhatUserConfig = {
       chainId: 56123,
       ignition: {
         maxPriorityFeePerGas: ethers.parseUnits("0.01", "gwei"),
+        maxFeePerGasLimit: ethers.parseUnits("100", "gwei"),
       },
     },
     mainnet: {
